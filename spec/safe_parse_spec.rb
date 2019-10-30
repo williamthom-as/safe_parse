@@ -4,6 +4,21 @@ RSpec.describe SafeParse do
     expect(SafeParse.extract_from_json(json_str, :abc)).to be 123
   end
 
+  it 'should return correct value with different case key' do
+    json_str = '{"abc": 123, "def": 456}'
+    expect(SafeParse.extract_from_json(json_str, :Abc)).to be 123
+  end
+
+  it 'should return correct value with period notation case key' do
+    json_str = '{"abc": { "def" : 123}, "def": 456}'
+    expect(SafeParse.extract_from_json(json_str, 'abc.def')).to be 123
+  end
+
+  it 'should return correct value with period notation case key in incorrect casing' do
+    json_str = '{"abc": { "def" : 123}, "def": 456}'
+    expect(SafeParse.extract_from_json(json_str, 'abc.DEF')).to be 123
+  end
+
   it 'should return default value with correct json and incorrect/missing key' do
     json_str = '{"abc": 123, "def": 456}'
     default = 789
